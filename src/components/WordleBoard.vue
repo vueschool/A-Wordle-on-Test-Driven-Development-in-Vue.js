@@ -12,13 +12,13 @@ const props = defineProps({
     validator: (wordGiven: string) => englishWords.includes(wordGiven)
   }
 })
+
 const guessesSubmitted = ref<string[]>([])
 
 const isGameOver = computed(() =>
     guessesSubmitted.value.length === MAX_GUESSES_COUNT
     || guessesSubmitted.value.includes(props.wordOfTheDay)
 )
-
 </script>
 
 <template>
@@ -28,7 +28,7 @@ const isGameOver = computed(() =>
         <guess-view :guess="guess"/>
       </li>
     </ul>
-    <guess-input @guess-submitted="guess => guessesSubmitted.push(guess)"/>
+    <guess-input :disabled="isGameOver" @guess-submitted="guess => guessesSubmitted.push(guess)"/>
 
     <p v-if="isGameOver"
        class="end-of-game-message"
