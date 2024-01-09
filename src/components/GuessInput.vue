@@ -8,6 +8,7 @@ const emit = defineEmits<{
   "guess-submitted": [guess: string]
 }>()
 
+
 const formattedGuessInProgress = computed<string>({
   get() {
     return guessInProgress.value ?? ""
@@ -34,6 +35,8 @@ function onSubmit() {
 <template>
   <input v-model="formattedGuessInProgress"
          :maxlength="WORD_SIZE"
+         autofocus
+         @blur="({target}) => (target as HTMLInputElement).focus()"
          type="text"
          @keydown.enter="onSubmit">
 </template>
