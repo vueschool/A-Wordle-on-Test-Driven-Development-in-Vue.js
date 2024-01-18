@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {WORD_SIZE} from "@/settings"
 
-defineProps<{ guess: string }>()
+withDefaults(defineProps<{ guess: string, shouldFlip?: boolean }>(), {shouldFlip: false})
 </script>
 
 <template>
@@ -9,12 +9,13 @@ defineProps<{ guess: string }>()
     <li v-for="(letter, index) in guess.padEnd(WORD_SIZE, ' ')"
         :key="`${letter}-${index}`"
         :data-letter="letter"
+        :class="{'with-flips': shouldFlip}"
         class="letter"
         v-text="letter"/>
   </ul>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 ul {
   margin: 0;
   padding: 0;
@@ -28,7 +29,9 @@ ul {
 }
 
 .letter {
-  background-color: white;
+  --front-color: hsl(0, 0%, 99%);
+  --back-color: hsl(0, 0%, 70%);
+  background-color: var(--front-color);
   border: 1px solid hsl(0, 0%, 70%);
   width: 5rem;
   height: 5rem;
@@ -50,6 +53,34 @@ li:not([data-letter=" "]) {
 
   50% {
     transform: scale(1.4);
+  }
+}
+
+$maxWordSize: 5;
+@for $i from 1 through $maxWordSize {
+  .with-flips:nth-of-type(#{$i}) {
+    animation: flip-card 300ms forwards;
+    animation-delay: #{250*$i}ms;
+  }
+}
+
+@keyframes flip-card {
+  0% {
+    transform: rotateY(0);
+    background-color: var(--front-color);
+  }
+
+  49% {
+    background-color: var(--front-color);
+  }
+  50% {
+    transform: rotateY(-90deg);
+    background-color: var(--back-color);
+  }
+
+  100% {
+    transform: rotateY(0);
+    background-color: var(--back-color);
   }
 }
 </style>
