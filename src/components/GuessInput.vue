@@ -7,6 +7,8 @@ import GuessView from "@/components/GuessView.vue"
 withDefaults(defineProps<{ disabled?: boolean }>(), {disabled: false})
 
 const guessInProgress = ref<string | null>(null)
+const hasFailedValidation = ref<boolean>(false)
+
 const emit = defineEmits<{
   "guess-submitted": [guess: string]
 }>()
@@ -28,6 +30,9 @@ const formattedGuessInProgress = computed<string>({
 
 function onSubmit() {
   if (!englishWords.includes(formattedGuessInProgress.value)) {
+    hasFailedValidation.value = true
+    setTimeout(() => hasFailedValidation.value = false, 500)
+
     return
   }
 
@@ -37,7 +42,7 @@ function onSubmit() {
 </script>
 
 <template>
-  <guess-view v-if="!disabled" :guess="formattedGuessInProgress"/>
+  <guess-view v-if="!disabled" :class="{shake: hasFailedValidation}" :guess="formattedGuessInProgress"/>
 
   <input v-model="formattedGuessInProgress"
          :maxlength="WORD_SIZE"
@@ -53,5 +58,29 @@ function onSubmit() {
 input {
   position: absolute;
   opacity: 0;
+}
+
+.shake {
+  animation: shake;
+  animation-duration: 100ms;
+  animation-iteration-count: 2;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(-2%);
+  }
+
+  25% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(2%);
+  }
+
+  75% {
+    transform: translateX(0);
+  }
 }
 </style>
