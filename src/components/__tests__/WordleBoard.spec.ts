@@ -206,6 +206,18 @@ describe("WordleBoard", () => {
             }
         })
     })
+
+    describe("Displaying hints/feedback to the player", () => {
+        test("hints are not displayed until the player submits their guess", async () => {
+            expect(wrapper.find("[data-letter-feedback]").exists(), "Feedback was being rendered before the player started typing their guess").toBe(false)
+
+            await playerTypesGuess(wordOfTheDay)
+            expect(wrapper.find("[data-letter-feedback]").exists(), "Feedback was rendered while the player was typing their guess").toBe(false)
+
+            await playerPressesEnter()
+            expect(wrapper.find("[data-letter-feedback]").exists(), "Feedback was not rendered after the player submitted their guess").toBe(true)
+        })
+    })
 })
 
 
