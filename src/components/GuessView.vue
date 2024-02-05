@@ -8,7 +8,11 @@ function getFeedback(letterPosition: number): null | "correct" | "incorrect" | "
     return null
   }
 
-  return props.answer[letterPosition] === props.guess[letterPosition] ? "correct" : "incorrect"
+  if (!props.answer.includes(props.guess[letterPosition])) {
+    return "incorrect"
+  }
+
+  return props.answer[letterPosition] === props.guess[letterPosition] ? "correct" : "almost"
 }
 </script>
 
